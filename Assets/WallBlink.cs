@@ -4,7 +4,11 @@ using System;
 
 public class WallBlink : Wall {
 
-    public GameObject indicatorPrefab;
+    public GameObject openEyePrefab, closedEyePrefab;
+
+    public Material eyeBrowMaterial;
+
+    public Transform leftPosition, rightPosition;
 
     public float maxTime = 10.0f;
     public float chargeTime = 0.5f;
@@ -12,10 +16,12 @@ public class WallBlink : Wall {
     private Pattern[] pattern;
 
     private int currentIndex = 0;
+    private Pattern currentPattern;
 
     private float charge = 0.0f;
 
-    private Indicator indicator;
+    private GameObject leftEye, rightEye;
+
     private EyePositionDataComponent eyePositionData;
 
     protected override void Awake()
@@ -36,9 +42,6 @@ public class WallBlink : Wall {
 
     protected override void OnActivate()
     {
-        GameObject obj = Instantiate(indicatorPrefab, transform.position, Quaternion.identity) as GameObject;
-        indicator = obj.GetComponent<Indicator>();
-
         charge = 0.0f;
         currentIndex = 0;
 
@@ -49,12 +52,20 @@ public class WallBlink : Wall {
             pattern[i] = new Pattern();
         }
 
+        currentPattern = pattern[currentIndex];
         ShowPattern();
     }
 
     private void ShowPattern()
     {
-        indicator.SetPattern(pattern[currentIndex]);
+        if (leftEye != null) Destroy(leftEye);
+        if (rightEye != null) Destroy(rightEye);
+
+        GameObject toInstantiate = currentPattern.left ? openEyePrefab : closedEyePrefab;
+        leftEye = Instantiate(toInstantiate, leftPosition.position, leftPosition.rotation) as GameObject;
+
+        toInstantiate = currentPattern.right ? openEyePrefab : closedEyePrefab;
+        rightEye = Instantiate(toInstantiate, rightPosition.position, rightPosition.rotation) as GameObject;
     }
 
     protected override void OnFail()
@@ -72,7 +83,8 @@ public class WallBlink : Wall {
     protected override void OnUpdate()
     {
         CheckPattern();
-        indicator.SetCharge(1 - (charge / chargeTime));
+
+        eyeBrowMaterial.color = Color.Lerp(Color.red, Color.green, charge/chargeTime);
 
         if (charge >= chargeTime) {
             charge = 0.0f;
@@ -80,6 +92,7 @@ public class WallBlink : Wall {
 
             if (currentIndex < pattern.Length)
             {
+                currentPattern = pattern[currentIndex];
                 ShowPattern();
             }
         }
@@ -89,8 +102,6 @@ public class WallBlink : Wall {
     {
         bool leftEye = eyePositionData.LastEyePosition.LeftEye.IsValid;
         bool rightEye = eyePositionData.LastEyePosition.RightEye.IsValid;
-
-        Pattern currentPattern = pattern[currentIndex];
 
         if (leftEye == currentPattern.left && rightEye == currentPattern.right)
         {
