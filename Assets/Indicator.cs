@@ -29,7 +29,7 @@ public class Indicator : MonoBehaviour {
 
     private void UpdateIndicator()
     {
-        leftIndicator.GetComponent<Renderer>().material.color = pattern.left ? Color.red : Color.green;
-        rightIndicator.GetComponent<Renderer>().material.color = pattern.right ? Color.red : Color.green;
+        leftIndicator.GetComponent<Renderer>().material.color = pattern.left ? Color.green : Color.red;
+        rightIndicator.GetComponent<Renderer>().material.color = pattern.right ? Color.green : Color.red;
     }
 }
