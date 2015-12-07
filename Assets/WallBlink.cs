@@ -7,7 +7,7 @@ public class WallBlink : Wall {
     public GameObject indicatorPrefab;
 
     public float maxTime = 10.0f;
-    public float chargeTime = 1.5f;
+    public float chargeTime = 0.5f;
 
     private Pattern[] pattern;
 
@@ -75,6 +75,7 @@ public class WallBlink : Wall {
         indicator.SetCharge(1 - (charge / chargeTime));
 
         if (charge >= chargeTime) {
+            charge = 0.0f;
             currentIndex++;
 
             if (currentIndex < pattern.Length)
