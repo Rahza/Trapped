@@ -35,14 +35,13 @@ public class WallCode : Wall {
     protected override void OnUpdate()
     {
         var lastGazePoint = gazePointDataComponent.LastGazePoint;
-
         Vector3 gazePointInWorldSpace = transform.position;
 
         if (lastGazePoint.IsValid)
         {
             Vector3 gazePointInScreenSpace = lastGazePoint.Screen;
 
-            gazePointInWorldSpace = Camera.main.ScreenToWorldPoint(new Vector3(gazePointInScreenSpace.x, gazePointInScreenSpace.y, transform.position.z));
+            gazePointInWorldSpace = Camera.main.ScreenToWorldPoint(new Vector3(gazePointInScreenSpace.x, gazePointInScreenSpace.y, -transform.position.x));
 
             LightManager.instance.FocusTarget(gazePointInWorldSpace);
         }

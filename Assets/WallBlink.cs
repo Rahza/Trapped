@@ -7,12 +7,13 @@ public class WallBlink : Wall {
     public GameObject indicatorPrefab;
 
     public float maxTime = 10.0f;
+    public float chargeTime = 1.5f;
 
     private Pattern[] pattern;
 
-    private int toSolve = 10;
-
     private int currentIndex = 0;
+
+    private float charge = 0.0f;
 
     private Indicator indicator;
     private EyePositionDataComponent eyePositionData;
@@ -30,7 +31,7 @@ public class WallBlink : Wall {
 
     protected override bool CheckFinish()
     {
-        return toSolve <= 0;
+        return currentIndex >= pattern.Length;
     }
 
     protected override void OnActivate()
@@ -38,11 +39,12 @@ public class WallBlink : Wall {
         GameObject obj = Instantiate(indicatorPrefab, transform.position, Quaternion.identity) as GameObject;
         indicator = obj.GetComponent<Indicator>();
 
+        charge = 0.0f;
         currentIndex = 0;
-        toSolve = level * 2;
-        pattern = new Pattern[toSolve];
 
-        for (int i = 0; i < toSolve; i++)
+        pattern = new Pattern[level*2];
+
+        for (int i = 0; i < pattern.Length; i++)
         {
             pattern[i] = new Pattern();
         }
@@ -69,9 +71,10 @@ public class WallBlink : Wall {
 
     protected override void OnUpdate()
     {
-        Debug.Log(eyePositionData.LastEyePosition.LeftEye);
+        CheckPattern();
+        indicator.SetCharge(charge);
 
-        if (CheckPattern()) {
+        if (charge >= chargeTime) {
             currentIndex++;
 
             if (currentIndex < pattern.Length)
@@ -81,8 +84,21 @@ public class WallBlink : Wall {
         }
     }
 
-    private bool CheckPattern()
+    private void CheckPattern()
     {
-        return false;
+        bool leftEye = eyePositionData.LastEyePosition.LeftEye.IsValid;
+        bool rightEye = eyePositionData.LastEyePosition.RightEye.IsValid;
+
+        Pattern currentPattern = pattern[currentIndex];
+
+        if (leftEye == currentPattern.left && rightEye == currentPattern.right)
+        {
+            charge += Time.deltaTime;
+        } else
+        {
+            charge -= Time.deltaTime;
+        }
+
+        charge = Mathf.Clamp(charge, 0.0f, chargeTime);
     }
 }
