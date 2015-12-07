@@ -72,7 +72,7 @@ public class WallBlink : Wall {
     protected override void OnUpdate()
     {
         CheckPattern();
-        indicator.SetCharge(charge);
+        indicator.SetCharge(1 - (charge / chargeTime));
 
         if (charge >= chargeTime) {
             currentIndex++;
