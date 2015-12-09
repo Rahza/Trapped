@@ -12,6 +12,9 @@ public class WallTrack : Wall {
 
     public float maxCharge = 3.0f;
 
+    public Color colorSafe;
+    public Color colorFail;
+
     private float diskZ;
 
     private GameObject disk;
@@ -95,6 +98,7 @@ public class WallTrack : Wall {
 
         charge = Mathf.Clamp(charge, 0.0f, maxCharge);
 
-        disk.GetComponent<Renderer>().material.color = Color.Lerp(Color.red, Color.green, charge / maxCharge);
+        disk.GetComponent<Renderer>().material.color = Color.Lerp(colorFail, colorSafe, charge / maxCharge);
+        LightManager.instance.SetIntensity(charge / maxCharge);
     }
 }

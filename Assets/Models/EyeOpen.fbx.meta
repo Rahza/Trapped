@@ -6,14 +6,22 @@ ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
     100000: //RootNode
+    100002: Camera
+    100004: eye_open
+    100006: Lamp
     400000: //RootNode
+    400002: Camera
+    400004: eye_open
+    400006: Lamp
     2300000: //RootNode
+    2300002: eye_open
     3300000: //RootNode
+    3300002: eye_open
     4300000: eye_open
   materials:
     importMaterials: 1
     materialName: 0
-    materialSearch: 1
+    materialSearch: 2
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0

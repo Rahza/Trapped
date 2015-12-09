@@ -6,6 +6,8 @@ using System.Collections.Generic;
 public class WallSpikes : Wall {
 
     public GameObject spikePrefab;
+    public GameObject holeProjectorPrefab;
+
     public float maxTime = 10.0f;
 
     public float gap = 2.0f;
@@ -22,6 +24,7 @@ public class WallSpikes : Wall {
     private float spikeZ;
 
     private List<GameObject> spikes;
+    private List<GameObject> projectors;
     private Spike target;
 
     protected override void Awake()
@@ -58,6 +61,7 @@ public class WallSpikes : Wall {
     {
         totalSpeed = level / 3.0f;
         spikes = new List<GameObject>();
+        projectors = new List<GameObject>();
 
         for (int i = 0; i < level; i++)
         {
@@ -87,6 +91,13 @@ public class WallSpikes : Wall {
 
         GameObject spike = Instantiate(spikePrefab, position, spikePrefab.transform.rotation) as GameObject;
         spikes.Add(spike);
+
+        position.z = 0;
+        Quaternion rotation = holeProjectorPrefab.transform.rotation;
+        rotation.z = UnityEngine.Random.Range(0, 361);
+
+        GameObject projector = Instantiate(holeProjectorPrefab, position, rotation) as GameObject;
+        projectors.Add(projector);
     }
 
     private void SetSpikeSpeed()
@@ -112,6 +123,11 @@ public class WallSpikes : Wall {
     protected override void OnReset()
     {
         foreach (GameObject o in spikes)
+        {
+            Destroy(o);
+        }
+
+        foreach (GameObject o in projectors)
         {
             Destroy(o);
         }

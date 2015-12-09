@@ -66,6 +66,7 @@ public class GameManager : MonoBehaviour {
 
     private IEnumerator RotateCamera()
     {
+        Debug.Log("rotating to " + activeWall);
         Vector3 targetPoint = activeWall.transform.position;
         Quaternion targetRotation = Quaternion.LookRotation(targetPoint - Camera.main.transform.position, Vector3.up);
         

@@ -8,7 +8,7 @@ public abstract class Wall : MonoBehaviour {
     public float marginZ = 1.0f;
 
     private bool active = false;
-    protected int level = 0;
+    protected int level = 10;
     protected float time = 0.0f;
 
     protected float xMin, xMax, yMin, yMax, zMin, zMax;
@@ -46,19 +46,21 @@ public abstract class Wall : MonoBehaviour {
     protected virtual void Finished()
     {
         active = false;
-        GameManager.instance.WallFinished();
 
         OnFinish();
         OnReset();
+
+        GameManager.instance.WallFinished();
     }
 
     protected virtual void Failed()
     {
         active = false;
-        GameManager.instance.WallFinished();
 
         OnFail();
         OnReset();
+
+        GameManager.instance.WallFinished();
     }
 
     public void Activate()

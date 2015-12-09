@@ -121,6 +121,7 @@ public class WallCode : Wall {
         int layerMask = 1 << 0;
 
         int count = 0;
+
         while (Physics.CheckSphere(position, gap, layerMask))
         {
             position = new Vector3(codeX, UnityEngine.Random.Range(yMin, yMax), UnityEngine.Random.Range(zMin, zMax));
@@ -132,7 +133,7 @@ public class WallCode : Wall {
             count++;
         }
         
-        GameObject numberObject = Instantiate(numberPrefab, position, Quaternion.identity) as GameObject;
+        GameObject numberObject = Instantiate(numberPrefab, position, numberPrefab.transform.rotation) as GameObject;
         numberObject.GetComponentInChildren<TextMesh>().text = "" + number;
 
         numbers.Add(numberObject);

@@ -24,11 +24,11 @@ public class Spike : MonoBehaviour {
         if (gazeAwareComponent.HasGaze && distance > 0)
         {
             transform.position -= transform.forward * speed * Time.deltaTime * fixatedModifier;
-            GetComponent<Renderer>().material.color = Color.green;
+            //GetComponent<Renderer>().material.color = Color.green;
         } else
         {
             transform.position += transform.forward * speed * Time.deltaTime;
-            GetComponent<Renderer>().material.color = Color.red;
+            //GetComponent<Renderer>().material.color = Color.red;
         }
 	}
 
