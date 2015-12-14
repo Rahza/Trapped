@@ -4,10 +4,10 @@ using System.Collections;
 public class LightManager : MonoBehaviour {
 
     // Damping speed
-    public float dampSpeed = 3.0f;
+    public float dampSpeed = 7.0f;
 
     // Distance between the previous and current target necessary for the light to actually move/rotate
-    public float threshold = 5f;
+    public float threshold = 2.5f;
 
     // Static reference to the instance
     public static LightManager instance = null;
