@@ -3,6 +3,12 @@ using System.Collections;
 
 public class LightManager : MonoBehaviour {
 
+    // Damping speed
+    public float dampSpeed = 3.0f;
+
+    // Distance between the previous and current target necessary for the light to actually move/rotate
+    public float threshold = 5f;
+
     // Static reference to the instance
     public static LightManager instance = null;
 
@@ -49,10 +55,16 @@ public class LightManager : MonoBehaviour {
         Reset();
         follow = false;
 
-        Quaternion lookAt = Quaternion.LookRotation(target, Vector3.up);
-        Quaternion damp = Quaternion.Slerp(transform.rotation, lookAt, Time.deltaTime);
-         
-        transform.LookAt(damp);
+        Quaternion targetRotation = Quaternion.LookRotation(target - transform.position);
+        float angle = Quaternion.Angle(transform.rotation, targetRotation);
+
+        Debug.Log(angle);
+        if (angle >= threshold)
+        {
+            Quaternion damp = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * dampSpeed);
+
+            transform.rotation = damp;
+        }
     }
 
     // Set the intensity of the light (intensity being treated as a procentual value)
