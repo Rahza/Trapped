@@ -22,6 +22,12 @@ public class WallTrack : Wall {
     // Time after which the player fails if he did not look at the disk
     public float focusTime = 3.0f;
 
+    // Probability of the disk to "teleport" after reaching its current target
+    public float startTeleportProbability = 0.1f;
+    
+    // Speed at which the disk "teleports"
+    public float teleportSpeed = 10.0f;
+
     // Color of the disk with high charge
     public Color colorSafe;
 
@@ -51,6 +57,10 @@ public class WallTrack : Wall {
 
     // Current speed of the disk
     private float speed = 2.0f;
+
+    private float speedModifier = 1.0f;
+
+    private float teleportProbability = 0.1f;
 
     protected override void Awake()
     {
@@ -84,6 +94,9 @@ public class WallTrack : Wall {
         // Calculate speed based upon the current level (higher level, higher speed)
         speed = minSpeed * Mathf.Pow(1.1f, level);
 
+        // Calculate teleportProbability based upon the current level (higher level, higer teleportProbability)
+        teleportProbability = startTeleportProbability + level * 0.025f;
+
         // Initialize charge as maxCharge
         charge = maxCharge;
 
@@ -116,7 +129,6 @@ public class WallTrack : Wall {
     // Every frame...
     protected override void OnUpdate()
     {
-        // Move the disk
         MoveDisk();
 
         // Check the user's gaze
@@ -132,11 +144,18 @@ public class WallTrack : Wall {
         // If the distance is lower than the distance necessary to reach the target...
         if (currentDistance <= distance)
         {
+            speedModifier = 1.0f;
+
             // ...stop the sound...
             audioSource.Stop();
 
             // ...calculate a new target...
             target = new Vector3(UnityEngine.Random.Range(xMin, xMax), UnityEngine.Random.Range(yMin, yMax), diskZ);
+
+            if (UnityEngine.Random.Range(0.0f, 1.0f) < teleportProbability)
+            {
+                speedModifier = teleportSpeed;
+            }
 
             // ...and start the sound again!
             audioSource.Play();
@@ -156,7 +175,7 @@ public class WallTrack : Wall {
         audioSource.volume = Mathf.Clamp(audioSource.volume, 0.0f, 1.0f);
 
         // Move the disk (slower towards the end)
-        disk.transform.position = Vector3.MoveTowards(disk.transform.position, target, Mathf.Lerp(0.0f, speed, currentDistance / 5.0f) * Time.deltaTime);
+        disk.transform.position = Vector3.MoveTowards(disk.transform.position, target, Mathf.Lerp(0.0f, speed * speedModifier, currentDistance / 5.0f) * Time.deltaTime);
     }
 
     // Check the gaze of the player

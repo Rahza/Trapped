@@ -19,6 +19,9 @@ public class WallBlink : Wall {
     // How long the player needs to "hold" their pose before the pattern counts as finished
     public float chargeTime = 0.5f;
 
+    // Modifier that will be applied when "discharging"
+    public float dischargeModifier = 0.5f;
+
     // Array of the patterns
     private Pattern[] pattern;
 
@@ -156,8 +159,8 @@ public class WallBlink : Wall {
             charge += Time.deltaTime;
         } else
         {
-            // ... otherwise, decrease charge
-            charge -= Time.deltaTime;
+            // ... otherwise, decrease charge (but at a slightly slower rate)
+            charge -= Time.deltaTime * dischargeModifier;
         }
 
         // Marke sure the current charge doesn't get too small or too high
