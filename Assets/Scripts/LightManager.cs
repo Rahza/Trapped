@@ -3,9 +3,6 @@ using System.Collections;
 
 public class LightManager : MonoBehaviour {
 
-    // Distance between the previous and current target necessary for the light to actually move/rotate
-    public float threshold = 0.5f;
-
     // Static reference to the instance
     public static LightManager instance = null;
 
@@ -20,9 +17,6 @@ public class LightManager : MonoBehaviour {
 
     // Save the intensity of the light
     private float baseIntensity;
-
-    // Current target of the light
-    private Vector3 currentTarget;
 
 	void Start () {
         // Get the component
@@ -55,14 +49,10 @@ public class LightManager : MonoBehaviour {
         Reset();
         follow = false;
 
-        float distance = 0.0f;
-        if (currentTarget != null) distance = Vector3.Distance(target, currentTarget);
-
-        if (distance >= threshold)
-        {
-            transform.LookAt(target);
-            currentTarget = target;
-        }
+        Quaternion lookAt = Quaternion.LookRotation(target, Vector3.up);
+        Quaternion damp = Quaternion.Slerp(transform.rotation, lookAt, Time.deltaTime);
+         
+        transform.LookAt(damp);
     }
 
     // Set the intensity of the light (intensity being treated as a procentual value)
